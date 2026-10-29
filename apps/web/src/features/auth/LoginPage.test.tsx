@@ -62,9 +62,9 @@ describe('LoginPage', () => {
     });
   });
 
-  it('renders demo credentials hint', () => {
+  it('renders demo account button', () => {
     renderLogin();
-    expect(screen.getByText(/demo credentials/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /try demo account/i })).toBeInTheDocument();
   });
 
   it('has a link to registration page', () => {
