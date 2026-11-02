@@ -12,6 +12,7 @@ import {
   X,
   TrendingUp,
   ChevronDown,
+  Lightbulb,
 } from 'lucide-react';
 import { useAuth } from '@/app/auth-context';
 import { cn } from '@/lib/utils';
@@ -21,6 +22,7 @@ const navItems = [
   { to: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
   { to: '/categories', icon: Tag, label: 'Categories' },
   { to: '/budgets', icon: Target, label: 'Budgets' },
+  { to: '/insights', icon: Lightbulb, label: 'Insights' },
   { to: '/reports', icon: BarChart3, label: 'Reports' },
   { to: '/settings', icon: Settings, label: 'Settings' },
 ];

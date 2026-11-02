@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, ChevronLeft, ChevronRight, Pencil, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Pencil, Trash2, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -30,17 +30,28 @@ function BudgetCard({ budget, currency, onEdit, onDelete }: {
 }) {
   const pct = Math.min(budget.percentage ?? 0, 100);
   const isOver = budget.isOverBudget;
-  const isNear = budget.isNearLimit;
+  const isAlert = budget.isAlert;
+  const isWarning = budget.isWarning;
+
+  const barColor = isOver ? 'bg-red-500' : isAlert ? 'bg-orange-500' : isWarning ? 'bg-yellow-500' : 'bg-primary-500';
+  const pctColor = isOver ? 'text-red-600' : isAlert ? 'text-orange-600' : isWarning ? 'text-yellow-600' : 'text-primary-600';
+  const remColor = isOver ? 'text-red-600' : isAlert ? 'text-orange-600' : 'text-gray-600';
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className={`bg-white rounded-lg border p-4 ${isOver ? 'border-red-200' : isAlert ? 'border-orange-200' : isWarning ? 'border-yellow-200' : 'border-gray-200'}`}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full flex-shrink-0"
             style={{ backgroundColor: budget.category.color ?? '#6b7280' }} />
           <h3 className="font-semibold text-gray-900 text-sm">{budget.category.name}</h3>
           {isOver && (
-            <AlertTriangle className="h-4 w-4 text-red-500" aria-label="Over budget" />
+            <AlertCircle className="h-4 w-4 text-red-500" aria-label="Over budget" />
+          )}
+          {!isOver && isAlert && (
+            <AlertTriangle className="h-4 w-4 text-orange-500" aria-label="Alert: 90% used" />
+          )}
+          {!isOver && !isAlert && isWarning && (
+            <AlertTriangle className="h-4 w-4 text-yellow-500" aria-label="Warning: 70% used" />
           )}
         </div>
         <div className="flex items-center gap-1">
@@ -60,16 +71,16 @@ function BudgetCard({ budget, currency, onEdit, onDelete }: {
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2.5">
           <div
-            className={`h-2.5 rounded-full transition-all ${isOver ? 'bg-red-500' : isNear ? 'bg-yellow-500' : 'bg-primary-500'}`}
+            className={`h-2.5 rounded-full transition-all ${barColor}`}
             style={{ width: `${pct}%` }}
           />
         </div>
         <div className="flex justify-between text-xs">
-          <span className={`font-medium ${isOver ? 'text-red-600' : 'text-gray-600'}`}>
+          <span className={`font-medium ${remColor}`}>
             {isOver ? 'Over by ' : 'Remaining: '}
             {formatCurrency(Math.abs(parseFloat(budget.remaining ?? '0')).toString(), currency)}
           </span>
-          <span className={`font-medium ${isOver ? 'text-red-600' : isNear ? 'text-yellow-600' : 'text-primary-600'}`}>
+          <span className={`font-medium ${pctColor}`}>
             {(budget.percentage ?? 0).toFixed(0)}%
           </span>
         </div>
@@ -159,6 +170,34 @@ export function BudgetsPage() {
           </Button>
         </div>
       </div>
+
+      {/* Alert banner */}
+      {!isLoading && !!budgets?.length && (() => {
+        const overCount = (budgets ?? []).filter((b) => b.isOverBudget).length;
+        const alertCount = (budgets ?? []).filter((b) => b.isAlert && !b.isOverBudget).length;
+        const warnCount = (budgets ?? []).filter((b) => b.isWarning && !b.isAlert && !b.isOverBudget).length;
+        if (!overCount && !alertCount && !warnCount) return null;
+        return (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium text-amber-800">Budget alerts:</span>
+            {overCount > 0 && (
+              <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">
+                <AlertCircle className="h-3 w-3" />{overCount} exceeded
+              </span>
+            )}
+            {alertCount > 0 && (
+              <span className="inline-flex items-center gap-1 text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-medium">
+                <AlertTriangle className="h-3 w-3" />{alertCount} at 90%+
+              </span>
+            )}
+            {warnCount > 0 && (
+              <span className="inline-flex items-center gap-1 text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-medium">
+                <AlertTriangle className="h-3 w-3" />{warnCount} at 70%+
+              </span>
+            )}
+          </div>
+        );
+      })()}
 
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

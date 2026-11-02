@@ -9,6 +9,7 @@ import { CategoriesPage } from '@/features/categories/CategoriesPage';
 import { BudgetsPage } from '@/features/budgets/BudgetsPage';
 import { ReportsPage } from '@/features/reports/ReportsPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
+import { InsightsPage } from '@/features/insights/InsightsPage';
 
 function NotFound() {
   return (
@@ -85,6 +86,7 @@ export function AppRouter() {
                 <Route path="/transactions" element={<TransactionsPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/budgets" element={<BudgetsPage />} />
+                <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/reports" element={<ReportsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="*" element={<NotFound />} />
