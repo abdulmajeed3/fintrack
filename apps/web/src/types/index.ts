@@ -51,6 +51,8 @@ export interface Budget {
   percentage?: number;
   isOverBudget?: boolean;
   isNearLimit?: boolean;
+  isAlert?: boolean;
+  isWarning?: boolean;
 }
 
 export interface AuthTokens {
@@ -117,6 +119,33 @@ export interface MonthlyReport {
   expense: string;
   net: string;
   transactionCount: number;
+}
+
+export interface InsightsCategoryItem {
+  categoryId: string;
+  name: string;
+  color: string | null;
+  amount: string;
+  previousAmount: string;
+  change: string;
+  changePercent: number | null;
+  percentage: number;
+  count: number;
+}
+
+export interface InsightsSuggestion {
+  type: 'success' | 'warning' | 'danger' | 'tip';
+  title: string;
+  description: string;
+}
+
+export interface MonthlyInsights {
+  currentMonth: { month: number; year: number; income: string; expense: string; net: string; expenseCount: number };
+  previousMonth: { month: number; year: number; income: string; expense: string; net: string; expenseCount: number };
+  comparison: { expenseChange: string; expenseChangePercent: number | null; savingsRate: number | null };
+  categoryBreakdown: InsightsCategoryItem[];
+  topCategory: InsightsCategoryItem | null;
+  suggestions: InsightsSuggestion[];
 }
 
 export interface TransactionFilters {

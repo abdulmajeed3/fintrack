@@ -9,6 +9,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
 import { BudgetsModule } from './modules/budgets/budgets.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { InsightsModule } from './modules/insights/insights.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { appConfig } from './config/app.config';
 
@@ -40,6 +41,7 @@ import { appConfig } from './config/app.config';
     BudgetsModule,
     DashboardModule,
     ReportsModule,
+    InsightsModule,
   ],
 })
 export class AppModule implements NestModule {

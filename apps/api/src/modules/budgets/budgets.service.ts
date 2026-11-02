@@ -32,13 +32,16 @@ export class BudgetsService {
           ? 0
           : spentDecimal.div(budgetDecimal).mul(100).toDecimalPlaces(1).toNumber();
 
+        const isOverBudget = spentDecimal.gt(budgetDecimal);
         return {
           ...budget,
           spent: spentDecimal.toFixed(2),
           remaining: remaining.toFixed(2),
           percentage,
-          isOverBudget: spentDecimal.gt(budgetDecimal),
-          isNearLimit: percentage >= 80 && !spentDecimal.gt(budgetDecimal),
+          isOverBudget,
+          isAlert: percentage >= 90 && !isOverBudget,
+          isWarning: percentage >= 70 && percentage < 90,
+          isNearLimit: percentage >= 70 && !isOverBudget,
         };
       }),
     );
