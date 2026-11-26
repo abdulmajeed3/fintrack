@@ -42,7 +42,10 @@ export class TransactionsService {
       };
     }
     if (search) {
-      where['description'] = { contains: search, mode: 'insensitive' };
+      where['OR'] = [
+        { description: { contains: search, mode: 'insensitive' } },
+        { notes: { contains: search, mode: 'insensitive' } },
+      ];
     }
 
     const orderBy =
