@@ -13,8 +13,11 @@ import {
   TrendingUp,
   ChevronDown,
   Lightbulb,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useAuth } from '@/app/auth-context';
+import { useTheme } from '@/app/theme-context';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -29,6 +32,7 @@ const navItems = [
 
 function Sidebar({ onClose }: { onClose?: () => void }) {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -84,6 +88,18 @@ function Sidebar({ onClose }: { onClose?: () => void }) {
             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
         </div>
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 w-full transition-colors"
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-4 w-4 flex-shrink-0" />
+          ) : (
+            <Moon className="h-4 w-4 flex-shrink-0" />
+          )}
+          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        </button>
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 w-full transition-colors"
